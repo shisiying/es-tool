@@ -37,6 +37,7 @@ services:
         hard: -1
     volumes:
       - es7data1:/usr/share/elasticsearch/data
+      - pulginsDir:/usr/share/elasticsearch/plugins
     ports:
       - 9200:9200
     networks:
@@ -57,6 +58,7 @@ services:
         hard: -1
     volumes:
       - es7data2:/usr/share/elasticsearch/data
+      - pulginsDir:/usr/share/elasticsearch/plugins
     networks:
       - es7net
 
@@ -65,6 +67,8 @@ volumes:
   es7data1:
     driver: local
   es7data2:
+    driver: local
+  pulginsDir:
     driver: local
 
 networks:
