@@ -25,8 +25,11 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
     container_name: es7_01
     environment:
-      - cluster.name=geektime
+      - cluster.name=cluster1
       - node.name=es7_01
+      - node.master=true
+      - node.data=true
+      - node.ingest=true
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.seed_hosts=es7_01,es7_02
@@ -46,8 +49,11 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
     container_name: es7_02
     environment:
-      - cluster.name=geektime
+      - cluster.name=cluster1
       - node.name=es7_02
+      - node.master=true
+      - node.data=true
+      - node.ingest=true
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.seed_hosts=es7_01,es7_02
@@ -74,4 +80,3 @@ volumes:
 networks:
   es7net:
     driver: bridge
-
