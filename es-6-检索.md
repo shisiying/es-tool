@@ -356,3 +356,6 @@ POST test003/_validate/query?explain=true
   }
 }
 ```
+
+### 跨集群搜索
+

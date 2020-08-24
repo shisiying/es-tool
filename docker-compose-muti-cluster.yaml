@@ -1,0 +1,88 @@
+version: '2.2'
+services:
+  cerebro:
+    image: lmenezes/cerebro:0.8.3
+    container_name: cerebro
+    ports:
+      - 9000:9000
+    command:
+      - -Dhosts.0.host=http://es7_01:9200
+    networks:
+      - es7net
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.1.0
+    container_name: kibana7
+    environment:
+      - I18N_LOCALE=zh-CN
+      - XPACK_GRAPH_ENABLED=true
+      - TIMELION_ENABLED=true
+      - XPACK_MONITORING_COLLECTION_ENABLED="true"
+      - ELASTICSEARCH_URL=http://es7_01:9200
+    ports:
+      - 5601:5601
+    networks:
+      - es7net
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    container_name: es7_01
+    environment:
+      - cluster.name=cluster1
+      - node.name=es7_01
+      - node.master=true
+      - node.data=true
+      - node.ingest=true
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - http.port=9200
+      - transport.port=9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es7data1:/usr/share/elasticsearch/data
+      - pulginsDir:/usr/share/elasticsearch/plugins
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - es7net
+      -
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+    container_name: es7_02
+    environment:
+      - cluster.name=cluster2
+      - node.name=es7_02
+      - node.master=true
+      - node.data=true
+      - node.ingest=true
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - http.port=9201
+      - transport.port=9301
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es7data2:/usr/share/elasticsearch/data
+      - pulginsDir:/usr/share/elasticsearch/plugins
+    ports:
+      - 9201:9201
+      - 9301:9301
+    networks:
+      - es7net
+volumes:
+  es7data1:
+    driver: local
+  es7data2:
+    driver: local
+  pulginsDir:
+    driver: local
+
+networks:
+  es7net:
+    driver: bridge
